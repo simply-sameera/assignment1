@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Product Details</h1>
+    <script>
+        let productId= new URLSearchParams(window.location.search)
+        let id= productId.get("id")
+        console.log(id)
+
+        async function fetchProductDetails(id){
+            let url= `https://dummyjson.com/products/${id}`
+            let response= await fetch(url)
+            let data= await response.json()
+            console.log(data)
+        }
+
+        fetchProductDetails(id)
+    </script>
+</body>
+</html>

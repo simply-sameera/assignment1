@@ -1,0 +1,41 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+
+header{
+    display: flex;
+    justify-content: space-between;
+    background-color: beige;
+    padding: 20px 30px; 
+}
+
+main{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    padding: 40px 20px;
+}
+
+.outerDiv{
+    width:350px;
+    border: 2px solid black;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    padding: 15px 10px;
+    border-radius: 30px;
+}
+
+.price-cart{
+    display: flex;
+    align-items: center;
+    gap: 100px;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
