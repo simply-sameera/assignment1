@@ -1,26 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">    
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Product Details</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <h1>Product Details</h1>
-    <script>
-        let productId= new URLSearchParams(window.location.search)
-        let id= productId.get("id")
-        console.log(id)
+<body data-page="product">
+    <header>
+        <a href="index.html" class="back-link">← Back to Products</a>
+        <a href="cart.html" class="cart-link">Cart (0)</a>
+    </header>
 
-        async function fetchProductDetails(id){
-            let url= `https://dummyjson.com/products/${id}`
-            let response= await fetch(url)
-            let data= await response.json()
-            console.log(data)
+    <main class="product-page">
+        <div id="product-details" class="product-card">
+            <p class="loading">Loading product...</p>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        const productId = new URLSearchParams(window.location.search).get("id");
+        const container = document.getElementById("product-details");
+
+        async function fetchProductDetails(id) {
+            if (!id) {
+                container.innerHTML = "<p class='error'>No product selected.</p>";
+                return;
+            }
+
+            try {
+                const url = `https://dummyjson.com/products/${id}`;
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error("Product not found.");
+                }
+
+                const data = await response.json();
+                const imageUrl = data.images?.[0] || data.thumbnail;
+
+                container.innerHTML = `
+                    <div class="product-image-wrapper">
+                        <img src="${imageUrl}" alt="${data.title}" class="product-image" />
+                    </div>
+                    <div class="product-info">
+                        <h2>${data.title}</h2>
+                        <p class="product-brand">Brand: ${data.brand}</p>
+                        <p class="product-description">${data.description}</p>
+                        <p class="product-category">Category: ${data.category}</p>
+                        <div class="product-price-row">
+                            <span class="price">Rs${Math.ceil(data.price * 95)}/-</span>
+                            <button class="add-btn" id="detail-add-btn">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById("detail-add-btn").addEventListener("click", () => {
+                    addToCart({
+                        id: data.id,
+                        title: data.title,
+                        description: data.description,
+                        price: data.price,
+                        thumbnail: imageUrl,
+                        brand: data.brand
+                    });
+                    window.location.href = "cart.html";
+                });
+            } catch (error) {
+                container.innerHTML = `<p class="error">${error.message}</p>`;
+            }
         }
 
-        fetchProductDetails(id)
+        fetchProductDetails(productId);
     </script>
 </body>
 </html>
